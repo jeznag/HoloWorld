@@ -1,42 +1,104 @@
 {
-    "Version": 1,
-    "UUID": "5e2bde1a-00b2-11e8-8916-8c859027cd3b",
-    "Name": "HoloWorld",
-    "Properties": {
-        "description": "provides an application template",
-        "language": "en"
-    },
-    "PropertiesSchemaFile": "properties_schema.json",
-    "RequiresVersion": 18,
-    "DHTConfig": {
-        "HashType": "sha2-256"
-    },
-    "Zomes": [
+  "Version": 1,
+  "UUID": "5e2bde1a-00b2-11e8-8916-8c859027cd3b",
+  "Name": "HoloWorld",
+  "Properties": {
+    "description": "provides an application template",
+    "language": "en"
+  },
+  "PropertiesSchemaFile": "properties_schema.json",
+  "RequiresVersion": 18,
+  "DHTConfig": {
+    "HashType": "sha2-256"
+  },
+  "Zomes": [
+    {
+      "Name": "HoloWorld",
+      "Description": "provide a sample zome",
+      "CodeFile": "holoWorldZome.js",
+      "Entries": [
         {
-            "Name": "HoloWorld",
-            "Description": "provide a sample zome",
-            "CodeFile": "holoWorldZome.js",
-            "Entries": [
-                {
-                    "Name": "holoWorldEntry",
-                    "DataFormat": "json",
-                    "SchemaFile": "holoWorldEntry.json",
-                    "Sharing": "public"
-                }
-            ],
-            "RibosomeType": "js",
-            "Functions": [
-                {
-                    "Name": "holoWorldEntryCreate",
-                    "CallingType": "json",
-                    "Exposure": "public"
-                },
-                {
-                    "Name": "holoWorldEntryRead",
-                    "CallingType": "json",
-                    "Exposure": "public"
-                }
-            ]
+          "Name": "holoWorldEntry",
+          "DataFormat": "json",
+          "SchemaFile": "holoWorldEntry.json",
+          "Sharing": "public"
+        },
+        {
+          "Name": "holoWorldWorld",
+          "DataFormat": "string",
+          "Sharing": "public"
+        },
+        {
+          "Name": "world_entry_link",
+          "DataFormat": "links"
         }
-    ]
+      ],
+      "RibosomeType": "js",
+      "Functions": [
+        {
+          "Name": "holoWorldEntryCreate",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "holoWorldEntryRead",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "holoWorldAddWorld",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "holoWorldEntryGetAll",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "holoWorldsGetAll",
+          "CallingType": "json",
+          "Exposure": "public"
+        }
+      ]
+    },
+    {
+      "Name": "anchors",
+      "Description": "anchors mixin",
+      "RibosomeType": "js",
+      "CodeFile": "anchors.js",
+      "Config": {
+        "ErrorHandling": "returnErrorValue"
+      },
+      "Entries": [
+        {
+          "Name": "anchor",
+          "DataFormat": "json",
+          "SchemaFile": "anchor.json",
+          "Sharing": "public"
+        },
+        {
+          "Name": "anchor_link",
+          "DataFormat": "links"
+        }
+      ],
+      "Functions": [
+        {
+          "Name": "anchor",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "exists",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "anchors",
+          "CallingType": "string",
+          "Exposure": "public"
+        }
+      ]
+    }
+  ]
 }

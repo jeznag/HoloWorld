@@ -1,34 +1,74 @@
 {
-    "Tests": [
+  "Tests": [
+    {
+      "Convey": "Create a new world",
+      "Zome": "HoloWorld",
+      "FnName": "holoWorldAddWorld",
+      "Input": {
+        "worldName": "earth"
+      },
+      "Output": "%h1%",
+      "Exposure": "public",
+      "Raw": false,
+      "Repeat": 0
+    },
+    {
+      "Convey": "We can create a new holoWorldEntry",
+      "Zome": "HoloWorld",
+      "FnName": "holoWorldEntryCreate",
+      "Input": {
+        "content": "this is the entry body",
+        "timestamp": "12345",
+        "world": "earth"
+      },
+      "Output": "%h1%",
+      "Exposure": "public",
+      "Raw": false,
+      "Repeat": 0
+    },
+    {
+      "Convey": "We can read a holoWorldEntry",
+      "Zome": "HoloWorld",
+      "FnName": "holoWorldEntryRead",
+      "Input": { "hash": "%h1%" },
+      "Output": {
+        "content": "this is the entry body",
+        "timestamp": "12345",
+        "world": "earth"
+      },
+      "Exposure": "public",
+      "Raw": false,
+      "Repeat": 0
+    },
+    {
+      "Convey": "List the entries for the world",
+      "Zome": "HoloWorld",
+      "FnName": "holoWorldEntryGetAll",
+      "Input": { "worldName": "earth" },
+      "Output": [
         {
-            "Convey": "We can create a new holoWorldEntry",
-            "Zome": "HoloWorld",
-            "FnName": "holoWorldEntryCreate",
-            "Input": {
-                "content": "this is the entry body",
-                "timestamp": 12345
-            },
-            "Output": "%h%",
-            "Exposure": "public",
-            "Raw": false,
-            "Repeat": 0
-        },
-        {
-            "Convey": "We can read a holoWorldEntry",
-            "Zome": "HoloWorld",
-            "FnName": "holoWorldEntryRead",
-            "Input": "%h%",
-            "Output": {
-                "content": "this is the entry body",
-                "timestamp": 12345
-            },
-            "Exposure": "public",
-            "Raw": false,
-            "Repeat": 0
+          "content": "this is the entry body",
+          "timestamp": "12345",
+          "world": "earth"
         }
-    ],
-    "Identity": "",
-    "Fixtures": {
-        "Agents": null
+      ],
+      "Exposure": "public",
+      "Raw": false,
+      "Repeat": 0
+    },
+    {
+      "Convey": "List the entries for the world 2",
+      "Zome": "HoloWorld",
+      "FnName": "holoWorldEntryGetAll",
+      "Input": "var entries = holoWorldEntryGetAll({ 'worldName': 'earth' }); entries.length === 1;",
+      "Output": true,
+      "Exposure": "public",
+      "Raw": true,
+      "Repeat": 0
     }
+  ],
+  "Identity": "",
+  "Fixtures": {
+    "Agents": null
+  }
 }

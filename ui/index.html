@@ -3,36 +3,91 @@
     <script type="text/javascript" src="/HoloWorld.js"></script>
   </head>
   <body>
+    <div id="worlds">
+    </div>
     <form>
       <p>Enter the text of the entry</p>
       <p>This will be stored in Holochain and the hash key for the new entry will be shown</p>
       <p>in the Hash text box below.</p>
+      <label for="world">World</label>
+      <br />
+      <input type="text" id="world" size="50" placeholder="The world to which you're saying hello" />
+      <br />
       <label for="entry">Entry</label>
-      <input type="text" id="holoWorldEntry" size="50" value="This text will be saved in Holochain" />
+      <br />
+      <input type="text" id="holoWorldEntry" size="50" placeholder="This text will be saved in Holochain" />
       <button type="submit" id="submitEntry">Submit</button>
     </form>
 
     <form>
       <p>Press the Read button and the hash key will be used to retrieve the entry</p>
-      <label for="hash">Hash</label>
-      <input type="text" id="hash" size="50"/>
-      <input type="text" id="entryContent" />
-      <button type="submit" id="readEntry">Read</button>
+      <table id="entries">
+      </table>
     </form>
 
     <script type="text/javascript">
-      document.getElementById("submitEntry").addEventListener("click", function(event){
-          event.preventDefault()
-          holoWorldEntryCreate(document.getElementById('holoWorldEntry').value, function(hash){
-            document.getElementById('hash').value = hash
+      function updateWorlds() {
+        holoWorldsGetAll((data) => {
+          const worldsContainer = document.querySelector('#worlds');
+          const parsedData  = JSON.parse(data || '[]');
+          worldsContainer.innerHTML = parsedData.map(datum =>
+            `<button data-world-hash="${datum.Hash}" data-world-name="${datum.Tag}">View messages for ${datum.Tag}</button>`
+          ).join('<br />');
+          worldsContainer.querySelectorAll('[data-world-hash]').forEach((worldButton) => {
+            worldButton.addEventListener('click', (e) => {
+              holoWorldEntryGetAll(e.target.getAttribute('data-world-name'), (data) => {
+                debugger;
+              });
+            });
           })
+        });
+      }
+
+      updateWorlds();
+
+      document.querySelector('#world').addEventListener('change', function (e) {
+        const world = e.target.value;
+        holoWorldAddWorld(world, (data) => {
+          // update list of worlds
+          updateWorlds();
+        });
       });
-      document.getElementById("readEntry").addEventListener("click", function(event){
-          event.preventDefault()
-          holoWorldEntryRead(document.getElementById('hash').value, function(task){
-              document.getElementById('entryContent').value = task.content
+
+      document.querySelector('#submitEntry').addEventListener("click", function(event) {
+          event.preventDefault();
+          addNewRow(event);
+      });
+
+      function addNewRow(event) {
+        const parent = event.target.parentElement;
+        const entryInput = document.querySelector('#holoWorldEntry');
+        const worldInput = document.querySelector('#world');
+
+        const table = document.querySelector('#entries');
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>
+              <label>Hash</label>
+              <input type="text" data-type="hash" size="80" />
+              <input type="text" data-type="entryContent" size="90" />
+              <button type="submit">Read</button>
+            </td>
+          `;
+        table.appendChild(newRow);
+
+        const hashInput = newRow.querySelector('[data-type="hash"]');
+        holoWorldEntryCreate(entryInput.value, worldInput.value, function (hash) {
+          hashInput.value = hash;
+        });
+
+        newRow.querySelector('[type="submit"]').addEventListener("click", function (event) {
+          event.preventDefault();
+          const parent = event.target.parentElement;
+          holoWorldEntryRead(parent.querySelector('[data-type="hash"]').value, function (task) {
+            parent.querySelector('[data-type="entryContent"]').value = `${task.content} - ${task.timestamp}`;
           })
-      });
+        });
+      }
   </script>
   </body>
 </html>
